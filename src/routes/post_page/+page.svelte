@@ -4,6 +4,10 @@
   import { onMount } from 'svelte';
   import { profilePicture, profileName, currentUserEmail } from '$lib/profileStore';
 
+  export function load() {
+	redirect(307, '/'+base+'/home');
+}
+
   let isClient = false;
   let post = null;
   let comments = [];

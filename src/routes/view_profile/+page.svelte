@@ -2,6 +2,10 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
 
+  export function load() {
+	redirect(307, '/'+base+'/home');
+}
+
   let userEmail = '';
   let userData = {
     profilePicture: '/pink skull.png',

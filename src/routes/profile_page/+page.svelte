@@ -14,6 +14,10 @@
   let authMessage = '';
   let authError = '';
 
+  export function load() {
+	redirect(307, '/'+base+'/home');
+}
+
   const DEFAULT_PICTURE = '/pink skull.png';
 
   function goHome() {
