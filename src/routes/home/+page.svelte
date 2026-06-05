@@ -3,7 +3,10 @@
   import { onMount } from 'svelte';
   import { resolve } from '$app/paths';
   import { profilePicture, profileName, currentUserEmail } from '$lib/profileStore';
-
+  import { base } from '$app/paths';
+  export function load() {
+	  redirect(307, resolve(base+'/home'));
+  }
 
   let otherUsers = [];
   let posts = [];

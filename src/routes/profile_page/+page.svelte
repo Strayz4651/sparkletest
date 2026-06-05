@@ -3,7 +3,9 @@
   import { resolve } from '$app/paths';
   import { onMount } from 'svelte';
   import { profilePicture, profileName, profileAbout, currentUserEmail } from '$lib/profileStore';
-
+  export function load() {
+	  redirect(307, resolve(base+'/home'));
+  }
   let name = '';
   let aboutMe = '';
   let pendingProfilePicture = '';

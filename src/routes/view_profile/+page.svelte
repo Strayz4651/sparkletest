@@ -3,6 +3,10 @@
   import { page } from '$app/stores';
   import { resolve } from '$app/paths';
   import { onMount } from 'svelte';
+  import { base } from '$app/paths';
+  export function load() {
+	  redirect(307, resolve(base+'/home'));
+  }
 
   let userData = {
     profilePicture: '/pink skull.png',

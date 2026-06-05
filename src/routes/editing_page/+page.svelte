@@ -3,7 +3,9 @@
   import { onMount, onDestroy } from 'svelte';
   import { profilePicture, profileName, currentUserEmail } from '$lib/profileStore';
   import { resolve } from '$app/paths';
-
+  export function load() {
+	  redirect(307, resolve(base+'/home'));
+  }
 
   const stickers = [
     '/skull1.png', '/skull2.png', '/skull3.png', '/skull4.png', '/skull5.png', '/skull6.png', '/skull7.png', '/skull8.png', '/skull9.png', '/skull10.png', '/skull11.png', '/skull12.png', '/skull13.png', '/skull14.png',

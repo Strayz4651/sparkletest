@@ -4,7 +4,9 @@
   import { onMount } from 'svelte';
   import { resolve } from '$app/paths';
   import { profilePicture, profileName, currentUserEmail } from '$lib/profileStore';
-
+  export function load() {
+	  redirect(307, resolve(base+'/home'));
+  }
   
 
   let isClient = false;
