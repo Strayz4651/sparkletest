@@ -1,24 +1,14 @@
 <script>
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import { resolve } from '$app/paths';
+  import { onMount } from 'svelte';
 
-  export function load() {
-	redirect(307, '/'+base+'/home');
-}
-
-  let userEmail = '';
   let userData = {
     profilePicture: '/pink skull.png',
     name: '',
     about: ''
   };
-
-  let myParameter = null;
-  function beforeUpdate() {
-    myParameter =  url.searchParams.get('my-parameter');
-  }
-
-  
 
   function goHome() {
     goto('/home');
@@ -47,6 +37,12 @@
     }
   }
 
+  onMount(() => {
+    const email = $page.url.searchParams.get('email');
+    if (email) {
+      loadUserData(email);
+    }
+  });
   
 </script>
 
@@ -216,7 +212,7 @@
   </div>
 
   <div class="middle-bar">
-    <div class="name-text">{userData.name || 'User'}</div>
+    <div class="name-text">{userData.name || 'Guest'}</div>
   </div>
 
   <div class="bottom-section">

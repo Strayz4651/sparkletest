@@ -1,22 +1,20 @@
 <script>
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { resolve } from '$app/paths';
   import { profilePicture, profileName, currentUserEmail } from '$lib/profileStore';
 
-  export function load() {
-	redirect(307, '/'+base+'/home');
-}
 
   let otherUsers = [];
   let posts = [];
   const POSTS_KEY = 'postedImages';
 
   function goToEditor() {
-    goto('/editing_page');
+    goto(resolve('/editing_page'));
   }
 
   function goToProfile() {
-    goto('/profile_page');
+    goto(resolve('/profile_page'));
   }
 
   function getRegisteredUsers() {
@@ -40,11 +38,11 @@
   }
 
   function viewUserProfile(email) {
-    goto(`/view_profile?email=${encodeURIComponent(email)}`);
+    goto(resolve(`/view_profile?email=${encodeURIComponent(email)}`));
   }
 
   function openPost(postId) {
-    goto(`/post_page?postId=${encodeURIComponent(postId)}`);
+    goto(resolve(`/post_page?postId=${encodeURIComponent(postId)}`));
   }
 
   onMount(() => {

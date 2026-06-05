@@ -1,5 +1,6 @@
 <script>
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
   import { onMount } from 'svelte';
   import { profilePicture, profileName, profileAbout, currentUserEmail } from '$lib/profileStore';
 
@@ -14,15 +15,13 @@
   let authMessage = '';
   let authError = '';
 
-  export function load() {
-	redirect(307, '/'+base+'/home');
-}
 
+
+  
   const DEFAULT_PICTURE = '/pink skull.png';
 
   function goHome() {
-    goto('/home');
-  }
+      goto(resolve('/home'));  }
 
   function openProfilePicker() {
     if ($currentUserEmail) {

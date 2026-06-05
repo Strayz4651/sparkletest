@@ -2,11 +2,10 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { resolve } from '$app/paths';
   import { profilePicture, profileName, currentUserEmail } from '$lib/profileStore';
 
-  export function load() {
-	redirect(307, '/'+base+'/home');
-}
+  
 
   let isClient = false;
   let post = null;
@@ -17,16 +16,20 @@
 
   let myParameter = null;
   function beforeUpdate() {
-    myParameter =  url.searchParams.get('my-parameter');
+    myParameter = $page.url.searchParams.get('my-parameter');
+  }
+
+  function getUrlPostId() {
+    return $page.url.searchParams.get('postId');
   }
 
 
   function goHome() {
-    goto('/home');
+    goto(resolve('/home'));
   }
 
   function openProfile() {
-    goto('/profile_page');
+    goto(resolve('/profile_page'));
   }
 
 
@@ -63,7 +66,7 @@
 
   function viewUserProfile(email) {
     if (!email) return;
-    goto(`/view_profile?email=${encodeURIComponent(email)}`);
+    goto(resolve(`/view_profile?email=${encodeURIComponent(email)}`));
   }
 
   function toggleLike() {
@@ -465,7 +468,7 @@
 <div class="container">
     <div style="display: flex; justify-content: center; width: 100%;">
     <img src="/sparkle logo.png" alt="Sparkle Logo" class="logo" />
-    </div>
+  </div>
 
   <!-- TOP BAR -->
   <div class="top-bar">

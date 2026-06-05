@@ -2,10 +2,8 @@
   import { goto } from '$app/navigation';
   import { onMount, onDestroy } from 'svelte';
   import { profilePicture, profileName, currentUserEmail } from '$lib/profileStore';
+  import { resolve } from '$app/paths';
 
-  export function load() {
-	redirect(307, '/'+base+'/home');
-}
 
   const stickers = [
     '/skull1.png', '/skull2.png', '/skull3.png', '/skull4.png', '/skull5.png', '/skull6.png', '/skull7.png', '/skull8.png', '/skull9.png', '/skull10.png', '/skull11.png', '/skull12.png', '/skull13.png', '/skull14.png',
@@ -65,17 +63,17 @@
   const DRAFT_KEY_PREFIX = 'editingDraft_';
   const POSTS_KEY = 'postedImages';
 
-  $: selectedLayer = layers.find((layer) => layer.id === selectedLayerId);
+  $d: selectedLayer = layers.find((layer) => layer.id === selectedLayerId);
 
   function goHome() {
     if (unsaved) {
       const ok = confirm('You have unsaved changes. Save before leaving?');
       if (ok) {
         saveDraft();
-        goto('/home');
+        goto(resolve('/home'));
       }
     } else {
-      goto('/home');
+      goto(resolve('/home'));
     }
   }
 
@@ -84,10 +82,10 @@
       const ok = confirm('You have unsaved changes. Save before leaving?');
       if (ok) {
         saveDraft();
-        goto('/profile_page');
+        goto(resolve('/profile_page'));
       }
     } else {
-      goto('/profile_page');
+      goto(resolve('/profile_page'));
     }
   }
 
@@ -140,17 +138,47 @@
     return typeof src === 'string' && src.startsWith('data:image/gif');
   }
 
-  function handleFile(e) {
+  // Compress image to reduce storage usage
+  function compressImage(dataUrl, quality = 0.65) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => resolve(dataUrl); // Fallback to original if compression fails
+      img.src = dataUrl;
+    });
+  }
+
+  async function handleFile(e) {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      pushHistory();
-      const layer = createLayer('user', reader.result);
-      layers = [...layers, layer];
-      selectedLayerId = layer.id;
-      unsaved = true;
-      imageSrc = reader.result;
+    reader.onload = async () => {
+      try {
+        // Compress uploaded image to reduce storage
+        const compressed = await compressImage(reader.result, 0.65);
+        pushHistory();
+        const layer = createLayer('user', compressed);
+        layers = [...layers, layer];
+        selectedLayerId = layer.id;
+        unsaved = true;
+        imageSrc = compressed;
+      } catch (error) {
+        console.error('Image compression failed:', error);
+        // Fallback: use original image
+        pushHistory();
+        const layer = createLayer('user', reader.result);
+        layers = [...layers, layer];
+        selectedLayerId = layer.id;
+        unsaved = true;
+        imageSrc = reader.result;
+      }
     };
     reader.readAsDataURL(file);
     e.target.value = '';
@@ -353,7 +381,8 @@
     ctx.restore();
   }
 
-  return canvas.toDataURL('image/png');
+  // Compress final composite to JPEG format with lower quality
+  return canvas.toDataURL('image/jpeg', 0.65);
 }
 
   async function postToHome() {
@@ -374,7 +403,7 @@
       const updated = [post, ...existing];
       window.localStorage.setItem(POSTS_KEY, JSON.stringify(updated));
       postModalOpen = false;
-      goto('/home');
+      goto(resolve('/home'));
     } catch (error) {
       console.error('Posting failed', error);
       alert('Posting failed. Please make sure all stickers and overlays are loaded correctly and try again.');
