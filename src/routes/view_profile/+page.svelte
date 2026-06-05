@@ -15,7 +15,7 @@
   };
 
   function goHome() {
-    goto('/home');
+    goto(resolve(base+'/home'));
   }
 
   function getRegisteredUsers() {

@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { onMount, onDestroy } from 'svelte';
   import { profilePicture, profileName, currentUserEmail } from '$lib/profileStore';
-  import { resolve } from '$app/paths';
+  import { resolve, base } from '$app/paths';
   export function load() {
 	  redirect(307, resolve(base+'/home'));
   }
@@ -72,10 +72,10 @@
       const ok = confirm('You have unsaved changes. Save before leaving?');
       if (ok) {
         saveDraft();
-        goto(resolve('/home'));
+        goto(resolve(base+'/home'));
       }
     } else {
-      goto(resolve('/home'));
+      goto(resolve(base+'/home'));
     }
   }
 
@@ -405,7 +405,7 @@
       const updated = [post, ...existing];
       window.localStorage.setItem(POSTS_KEY, JSON.stringify(updated));
       postModalOpen = false;
-      goto(resolve('/home'));
+      goto(resolve(base+'/home'));
     } catch (error) {
       console.error('Posting failed', error);
       alert('Posting failed. Please make sure all stickers and overlays are loaded correctly and try again.');

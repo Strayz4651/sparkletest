@@ -23,7 +23,7 @@
   const DEFAULT_PICTURE = '/pink skull.png';
 
   function goHome() {
-      goto(resolve('/home'));  }
+      goto(resolve(base+'/home'));  }
 
   function openProfilePicker() {
     if ($currentUserEmail) {
